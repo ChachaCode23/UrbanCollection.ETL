@@ -90,6 +90,30 @@ public class Worker : BackgroundService
                 _logger.LogWarning("--- [API] URL no configurada, extraccion omitida.");
             }
 
+// ===== LIMPIEZA Y CARGA DE FACT TABLES =====
+            var factLoader = new FactLoader(connString,
+                LoggerFactory.Create(b => b.AddConsole()).CreateLogger<FactLoader>());
+
+            _logger.LogInformation("--- Limpiando y recargando FactVentas ---");
+            await factLoader.LimpiarFactVentasAsync();
+            var insertadosVentas = await factLoader.CargarFactVentasAsync(ventasValidas);
+            _logger.LogInformation("FactVentas: {count} registros insertados.", insertadosVentas);
+
+            _logger.LogInformation("--- Limpiando y recargando FactEnvios ---");
+            await factLoader.LimpiarFactEnviosAsync();
+            var insertadosEnvios = await factLoader.CargarFactEnviosAsync();
+            _logger.LogInformation("FactEnvios: {count} registros insertados.", insertadosEnvios);
+
+            _logger.LogInformation("--- Limpiando y recargando FactPagos ---");
+            await factLoader.LimpiarFactPagosAsync();
+            var insertadosPagos = await factLoader.CargarFactPagosAsync();
+            _logger.LogInformation("FactPagos: {count} registros insertados.", insertadosPagos);
+
+            _logger.LogInformation("--- Limpiando y recargando FactInventario ---");
+            await factLoader.LimpiarFactInventarioAsync();
+            var insertadosInventario = await factLoader.CargarFactInventarioAsync();
+            _logger.LogInformation("FactInventario: {count} registros insertados.", insertadosInventario);
+            
             // ===== CARGA FINAL =====
             _logger.LogInformation("--- Cargando datos desde staging a analytics ---");
             var resultadoProductos = cargador.CargarProductos(productosValidos);
