@@ -95,7 +95,6 @@ public class Worker : BackgroundService
                 LoggerFactory.Create(b => b.AddConsole()).CreateLogger<FactLoader>());
 
             _logger.LogInformation("--- Limpiando y recargando FactVentas ---");
-            await factLoader.LimpiarFactVentasAsync();
             var insertadosVentas = await factLoader.CargarFactVentasAsync(ventasValidas);
             _logger.LogInformation("FactVentas: {count} registros insertados.", insertadosVentas);
 
@@ -110,7 +109,6 @@ public class Worker : BackgroundService
             _logger.LogInformation("FactPagos: {count} registros insertados.", insertadosPagos);
 
             _logger.LogInformation("--- Limpiando y recargando FactInventario ---");
-            await factLoader.LimpiarFactInventarioAsync();
             var insertadosInventario = await factLoader.CargarFactInventarioAsync();
             _logger.LogInformation("FactInventario: {count} registros insertados.", insertadosInventario);
             
